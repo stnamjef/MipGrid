@@ -1,0 +1,76 @@
+model:
+  name: "MipTensorVM"
+  # kernel
+  n_kernels: 4
+  kernel_size: 3
+  kernel_init: "gaussian"
+  learnable_kernel: false
+  scale_types: null  # must override
+  # grid
+  den_channels: [16, 4, 4]
+  app_channels: [48, 12, 12]
+  # density
+  density_shift: -10
+  density_activation: "relu"
+  # to_rgb module
+  feat_n_freqs: 0
+  view_n_freqs: 0
+  to_rgb_in_features: 27
+  to_rgb_hidden_features: 128
+  # misc
+  distance_scale: 25
+  alpha_mask_threshold: 0.0001
+  raymarch_weight_threshold: 0.0001
+
+loss:
+  # regularization
+  l1_weight_init: 0.0
+  l1_weight_rest: 0.0
+  ortho_weight: 0.0
+  tv_weight_den: 1.0
+  tv_weight_app: 1.0
+  end_lossmult: 1000000000  # 1e9
+
+dataset:
+  name: "multiscale_llff"
+  data_dir: "/workspace/dataset/nerf_llff_data/fern"
+  n_downsamples: 4
+  downsample: 1.0  # equivalent to images_4
+  return_radii: true
+  patch_size: 1
+
+training:
+  # kernel
+  begin_kernel: 5500
+  # rendering
+  n_samples: 1000000
+  step_ratio: 0.5
+  ndc_ray: true
+  # learning rate
+  lr_grid: 0.02
+  lr_network: 0.001
+  lr_decay_iters: -1
+  lr_decay_target_ratio: 0.1
+  lr_upsample_reset: true
+  # loader
+  batch_size: 4096
+  n_iters: 25000
+  # grid size
+  n_voxel_init: 2097156      # 128**3
+  n_voxel_final: 262144000   # 640**3
+  upsample_list: [2000, 3000, 4000, 5500]
+  update_alpha_mask_list: [2500,]
+  # misc
+  vis_every: 10000
+  progress_refresh_rate: 10
+  render_train: false
+  render_test: true
+  render_path: false
+  ckpt: null
+
+testing:
+  ndc_ray: true
+  render_train: false
+  render_test: true
+  render_path: false
+  ckpt: null

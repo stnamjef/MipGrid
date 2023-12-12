@@ -1,0 +1,67 @@
+model:
+  name: "TensorVM"
+  # grid
+  den_channels: [16, 16, 16]
+  app_channels: [48, 48, 48]
+  # density
+  density_shift: -10
+  density_activation: "softplus"
+  # to_rgb module
+  feat_n_freqs: 2
+  view_n_freqs: 2
+  to_rgb_in_features: 27
+  to_rgb_hidden_features: 128
+  # misc
+  distance_scale: 25
+  alpha_mask_threshold: 0.0001
+  raymarch_weight_threshold: 0.0004
+
+loss:
+  # regularization
+  l1_weight_init: 0.00008
+  l1_weight_rest: 0.00004
+  ortho_weight: 0.0
+  tv_weight_den: 0.0
+  tv_weight_app: 0.0
+
+dataset:
+  name: "blender"
+  data_dir: "/workspace/dataset/nerf_synthetic/lego"
+  n_downsamples: 1
+  downsample: 1.0
+  return_radii: false
+  patch_size: 1
+
+training:
+  # rendering
+  n_samples: 1000000
+  step_ratio: 0.5
+  ndc_ray: false
+  # learning rate
+  lr_grid: 0.02
+  lr_network: 0.001
+  lr_decay_iters: -1
+  lr_decay_target_ratio: 0.1
+  lr_upsample_reset: true
+  # loader
+  batch_size: 4096
+  n_iters: 40000
+  # grid size
+  n_voxel_init: 2097156     # 128**3
+  n_voxel_final: 27000000   # 300**3
+  upsample_list: [2000, 3000, 4000, 5500, 7000]
+  update_alpha_mask_list: [2000, 4000]
+  # misc
+  vis_every: 10000
+  progress_refresh_rate: 10
+  render_train: false
+  render_test: true
+  render_path: false
+  ckpt: null
+
+testing:
+  ndc_ray: false
+  render_train: false
+  render_test: true
+  render_path: false
+  ckpt: null

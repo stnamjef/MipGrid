@@ -1,0 +1,7 @@
+scipy
+pandas
+kornia
+imageio
+pyyaml
+opencv-python-headless
+lpips
